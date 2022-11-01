@@ -1,0 +1,39 @@
+#define BLINKER_WIFI
+
+#include <Blinker.h>
+
+char auth[] = "1fc80134166e";
+char ssid[] = "CE-Hub-Student";
+char pswd[] = "casa-ce-gagarin-public-service";
+
+#define BUTTON_1 "btn-abc"
+
+BlinkerButton Button1(BUTTON_1);
+
+void button1_callback(const String & state)
+{
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+}
+
+void dataRead(const String & data)
+{
+    BLINKER_LOG("Blinker readString: ", data);
+}
+
+void setup()
+{
+    Serial.begin(115200);
+    BLINKER_DEBUG.stream(Serial);
+
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, LOW);
+
+    Blinker.begin(auth, ssid, pswd);
+    Blinker.attachData(dataRead);
+    Button1.attach(button1_callback);
+}
+
+void loop()
+{
+    Blinker.run();
+}
